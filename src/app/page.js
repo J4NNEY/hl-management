@@ -152,43 +152,6 @@ function PageContent() {
 
   return (
     <div className={`app-container ${isCollapsed ? 'sidebar-collapsed' : ''}`}>
-      {/* Floating Toggle Button for desktop when collapsed */}
-      {isCollapsed && (
-        <button
-          onClick={handleToggleCollapse}
-          className="no-print no-mobile"
-          style={{
-            position: 'fixed',
-            left: '1.25rem',
-            top: '1.25rem',
-            zIndex: 99,
-            background: '#0f172a',
-            color: '#e2e8f0',
-            border: '1px solid rgba(255, 255, 255, 0.08)',
-            borderRadius: 'var(--radius-sm)',
-            width: '40px',
-            height: '40px',
-            cursor: 'pointer',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
-            transition: 'all var(--transition-fast)'
-          }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.background = '#1e293b';
-            e.currentTarget.style.boxShadow = '0 6px 20px rgba(0, 0, 0, 0.25)';
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.background = '#0f172a';
-            e.currentTarget.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.15)';
-          }}
-          title="Tampilkan Menu"
-        >
-          <Menu size={18} />
-        </button>
-      )}
-
       {/* Mobile Header Bar */}
       <header className="mobile-header no-print">
         <button 
@@ -206,7 +169,7 @@ function PageContent() {
           {sidebarOpen ? <X size={24} /> : <Menu size={24} />}
         </button>
         <span style={{ fontWeight: '800', letterSpacing: '1px', color: '#ffffff' }}>
-          HL MANAGEMENT
+          HL INTERNAL FINANCE
         </span>
         <div style={{ width: '24px' }}></div> {/* Spacer to center title */}
       </header>
@@ -226,6 +189,7 @@ function PageContent() {
         isOpen={sidebarOpen}
         onClose={() => setSidebarOpen(false)}
         onCollapse={handleToggleCollapse}
+        isCollapsed={isCollapsed}
       />
 
       <main className="main-content">

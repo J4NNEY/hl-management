@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import { useDatabase, formatIDR } from '../../context/DatabaseContext';
-import { Plus, Edit2, Trash2, BookOpen, AlertCircle, X, Loader2, User } from 'lucide-react';
+import { Plus, Edit2, Trash2, BookOpen, AlertCircle, X, Loader2, User, Search } from 'lucide-react';
 
 export default function CustomerList({ onSelectCustomer }) {
   const { customers, addCustomer, editCustomer, deleteCustomer } = useDatabase();
 
   const [showModal, setShowModal] = useState(false);
   const [editingId, setEditingId] = useState(null);
+  const [searchQuery, setSearchQuery] = useState('');
   
   // Form States
   const [name, setName] = useState('');
@@ -23,6 +24,9 @@ export default function CustomerList({ onSelectCustomer }) {
   const [submitting, setSubmitting] = useState(false);
 
   const activeCustomers = customers.filter((c) => !c.deleted);
+  const filteredCustomers = activeCustomers.filter((c) =>
+    c.name.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
   const resetForm = () => {
     setName('');
@@ -131,96 +135,135 @@ export default function CustomerList({ onSelectCustomer }) {
         </button>
       </div>
 
-      {/* CUSTOMER TABLE */}
-      <div className="glass-card card-accent-indigo">
-        {activeCustomers.length === 0 ? (
-          <div style={{ textAlign: 'center', padding: '2rem', color: 'var(--text-secondary)' }}>
-            Belum ada pelanggan terdaftar. Silakan tambah pelanggan baru.
+      {/* CUSTOMER LIST & SEARCH */}
+      {activeCustomers.length === 0 ? (
+        <div className="glass-card card-accent-indigo" style={{ textAlign: 'center', padding: '2rem', color: 'var(--text-secondary)' }}>
+          Belum ada pelanggan terdaftar. Silakan tambah pelanggan baru.
+        </div>
+      ) : (
+        <>
+          <div className="search-bar-container">
+            <Search size={20} style={{ color: 'var(--text-secondary)' }} />
+            <input
+              type="text"
+              className="search-input"
+              placeholder="Cari nama pelanggan..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              style={{ width: '100%' }}
+            />
+            {searchQuery && (
+              <button 
+                type="button" 
+                onClick={() => setSearchQuery('')}
+                style={{ 
+                  background: 'none', 
+                  border: 'none', 
+                  color: 'var(--text-secondary)', 
+                  cursor: 'pointer',
+                  padding: '4px',
+                  display: 'flex',
+                  alignItems: 'center'
+                }}
+              >
+                <X size={16} />
+              </button>
+            )}
           </div>
-        ) : (
-          <div className="table-wrapper table-responsive-cards">
-            <table>
-              <thead>
-                <tr>
-                  <th>Nama Pelanggan</th>
-                  <th>Diskon LM (Cascading)</th>
-                  <th>Diskon BR (Cascading)</th>
-                  <th>Batas Kelayakan Bonus</th>
-                  <th style={{ textAlign: 'right' }}>Aksi</th>
-                </tr>
-              </thead>
-              <tbody>
-                {activeCustomers.map((customer) => (
-                  <tr key={customer.id}>
-                    <td data-label="Nama Pelanggan">
-                      <strong style={{ fontSize: '1rem', display: 'inline-flex', alignItems: 'center', gap: '0.5rem' }}>
-                        <User size={16} style={{ color: 'var(--primary-color)' }} />
-                        {customer.name}
-                      </strong>
-                    </td>
-                    <td data-label="Diskon LM">
-                      {customer.discountsLM && customer.discountsLM.length > 0 ? (
-                        <div style={{ display: 'flex', gap: '0.25rem', flexWrap: 'wrap' }}>
-                          {customer.discountsLM.map((d, i) => (
-                            <span key={i} className="badge badge-primary">
-                              {d}%
-                            </span>
-                          ))}
-                        </div>
-                      ) : (
-                        <span style={{ color: 'var(--text-muted)', fontSize: '0.85rem' }}>Tidak ada</span>
-                      )}
-                    </td>
-                    <td data-label="Diskon BR">
-                      {customer.discountsBR && customer.discountsBR.length > 0 ? (
-                        <div style={{ display: 'flex', gap: '0.25rem', flexWrap: 'wrap' }}>
-                          {customer.discountsBR.map((d, i) => (
-                            <span key={i} className="badge badge-info">
-                              {d}%
-                            </span>
-                          ))}
-                        </div>
-                      ) : (
-                        <span style={{ color: 'var(--text-muted)', fontSize: '0.85rem' }}>Tidak ada</span>
-                      )}
-                    </td>
-                    <td data-label="Batas Kelayakan Bonus">
-                      {formatIDR(customer.threshold || 10000000)}
-                    </td>
-                    <td data-label="Aksi">
-                      <div style={{ display: 'flex', gap: '0.5rem', justifyContent: 'flex-end' }}>
-                        <button
-                          onClick={() => onSelectCustomer(customer.id)}
-                          className="btn btn-secondary btn-sm"
-                          title="Buka Buku Besar"
-                        >
-                          <BookOpen size={15} /> Buku Besar
-                        </button>
-                        <button
-                          onClick={() => handleOpenEdit(customer)}
-                          className="btn btn-secondary btn-sm"
-                          title="Edit"
-                          style={{ color: 'var(--accent-color)', borderColor: 'rgba(6, 182, 212, 0.2)' }}
-                        >
-                          <Edit2 size={15} />
-                        </button>
-                        <button
-                          onClick={() => handleDelete(customer.id, customer.name)}
-                          className="btn btn-secondary btn-sm"
-                          title="Hapus"
-                          style={{ color: 'var(--danger-color)', borderColor: 'rgba(239, 68, 68, 0.2)' }}
-                        >
-                          <Trash2 size={15} />
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+
+          <div className="glass-card card-accent-indigo">
+            {filteredCustomers.length === 0 ? (
+              <div style={{ textAlign: 'center', padding: '2rem', color: 'var(--text-secondary)' }}>
+                Tidak ada pelanggan dengan nama "{searchQuery}"
+              </div>
+            ) : (
+              <div className="table-wrapper table-responsive-cards">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Nama Pelanggan</th>
+                      <th>Diskon LM (Cascading)</th>
+                      <th>Diskon BR (Cascading)</th>
+                      <th>Batas Kelayakan Bonus</th>
+                      <th style={{ textAlign: 'right' }}>Aksi</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {filteredCustomers.map((customer) => (
+                      <tr key={customer.id}>
+                        <td data-label="Nama Pelanggan" style={{ whiteSpace: 'nowrap' }}>
+                          <strong style={{ fontSize: '1rem', display: 'inline-flex', alignItems: 'center', gap: '0.5rem' }}>
+                            <User size={16} style={{ color: 'var(--primary-color)' }} />
+                            {customer.name}
+                          </strong>
+                        </td>
+                        <td data-label="Diskon LM">
+                          {customer.discountsLM && customer.discountsLM.length > 0 ? (
+                            <div style={{ display: 'flex', gap: '0.25rem', flexWrap: 'wrap' }}>
+                              {customer.discountsLM.map((d, i) => (
+                                <span key={i} className="badge badge-primary">
+                                  {d}%
+                                </span>
+                              ))}
+                            </div>
+                          ) : (
+                            <span style={{ color: 'var(--text-muted)', fontSize: '0.85rem' }}>Tidak ada</span>
+                          )}
+                        </td>
+                        <td data-label="Diskon BR">
+                          {customer.discountsBR && customer.discountsBR.length > 0 ? (
+                            <div style={{ display: 'flex', gap: '0.25rem', flexWrap: 'wrap' }}>
+                              {customer.discountsBR.map((d, i) => (
+                                <span key={i} className="badge badge-info">
+                                  {d}%
+                                </span>
+                              ))}
+                            </div>
+                          ) : (
+                            <span style={{ color: 'var(--text-muted)', fontSize: '0.85rem' }}>Tidak ada</span>
+                          )}
+                        </td>
+                        <td data-label="Batas Kelayakan Bonus" style={{ whiteSpace: 'nowrap' }}>
+                          {formatIDR(customer.threshold || 10000000)}
+                        </td>
+                        <td data-label="Aksi" style={{ whiteSpace: 'nowrap', width: '1%' }}>
+                          <div style={{ display: 'flex', gap: '0.5rem', justifyContent: 'flex-end' }}>
+                            <button
+                              onClick={() => onSelectCustomer(customer.id)}
+                              className="btn btn-secondary btn-sm"
+                              title="Buka Buku Besar"
+                            >
+                              <BookOpen size={15} /> Buku Besar
+                            </button>
+                            <button
+                              onClick={() => handleOpenEdit(customer)}
+                              className="btn btn-secondary btn-sm"
+                              title="Edit"
+                              style={{ color: 'var(--accent-color)', borderColor: 'rgba(6, 182, 212, 0.2)', display: 'inline-flex', alignItems: 'center', gap: '0.25rem' }}
+                            >
+                              <Edit2 size={13} />
+                              <span>Ubah</span>
+                            </button>
+                            <button
+                              onClick={() => handleDelete(customer.id, customer.name)}
+                              className="btn btn-secondary btn-sm"
+                              title="Hapus"
+                              style={{ color: 'var(--danger-color)', borderColor: 'rgba(239, 68, 68, 0.2)', display: 'inline-flex', alignItems: 'center', gap: '0.25rem' }}
+                            >
+                              <Trash2 size={13} />
+                              <span>Hapus</span>
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
           </div>
-        )}
-      </div>
+        </>
+      )}
 
       {/* ADD/EDIT MODAL */}
       {showModal && (

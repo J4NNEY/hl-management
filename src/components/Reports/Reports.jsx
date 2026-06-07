@@ -155,7 +155,7 @@ export default function Reports({ onEditTx }) {
       {/* PRINT-ONLY HEADER */}
       <div className="print-only print-header">
         <h1 style={{ color: 'black', textAlign: 'center', fontSize: '20pt', margin: 0 }}>LAPORAN REKAPITULASI PENJUALAN</h1>
-        <p style={{ color: 'black', textAlign: 'center', margin: '5px 0 20px 0' }}>HL Sales & Receivables Management App</p>
+        <p style={{ color: 'black', textAlign: 'center', margin: '5px 0 20px 0' }}>HL Internal Finance App</p>
         
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', color: 'black', marginBottom: '20px' }}>
           <div><strong>Tahun:</strong> {selectedYear}</div>
@@ -425,17 +425,19 @@ export default function Reports({ onEditTx }) {
                             onClick={() => onEditTx(b.id)}
                             className="btn btn-secondary btn-sm"
                             title="Edit"
-                            style={{ color: 'var(--accent-color)', borderColor: 'rgba(6, 182, 212, 0.2)' }}
+                            style={{ color: 'var(--accent-color)', borderColor: 'rgba(6, 182, 212, 0.2)', display: 'inline-flex', alignItems: 'center', gap: '0.25rem' }}
                           >
-                            <Edit2 size={14} />
+                            <Edit2 size={13} />
+                            <span>Ubah</span>
                           </button>
                           <button
                             onClick={() => handleDeleteTx(b.id, b.bonNo)}
                             className="btn btn-secondary btn-sm"
                             title="Hapus"
-                            style={{ color: 'var(--danger-color)', borderColor: 'rgba(239, 68, 68, 0.2)' }}
+                            style={{ color: 'var(--danger-color)', borderColor: 'rgba(239, 68, 68, 0.2)', display: 'inline-flex', alignItems: 'center', gap: '0.25rem' }}
                           >
-                            <Trash2 size={14} />
+                            <Trash2 size={13} />
+                            <span>Hapus</span>
                           </button>
                         </div>
                       </td>

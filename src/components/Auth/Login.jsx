@@ -40,8 +40,8 @@ export default function Login() {
 
   return (
     <div className="auth-wrapper">
-      <div className="glass-card modal-content" style={{ 
-        maxWidth: '420px', 
+      <div className="glass-card modal-content" style={{
+        maxWidth: '420px',
         padding: '2.5rem',
         position: 'relative',
         zIndex: 1,
@@ -63,9 +63,9 @@ export default function Login() {
           }}>
             <Shield size={28} color="white" />
           </div>
-          <h1 style={{ 
-            fontSize: '1.65rem', 
-            fontWeight: '800', 
+          <h1 style={{
+            fontSize: '1.65rem',
+            fontWeight: '800',
             color: '#0f172a',
             letterSpacing: '-0.5px',
             marginBottom: '0.25rem'
@@ -78,14 +78,14 @@ export default function Login() {
         </div>
 
         {error && (
-          <div style={{ 
-            display: 'flex', 
-            alignItems: 'center', 
-            gap: '0.75rem', 
-            backgroundColor: 'var(--danger-bg)', 
-            border: '1px solid rgba(220, 38, 38, 0.15)', 
-            padding: '0.75rem 1rem', 
-            borderRadius: 'var(--radius-sm)', 
+          <div style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '0.75rem',
+            backgroundColor: 'var(--danger-bg)',
+            border: '1px solid rgba(220, 38, 38, 0.15)',
+            padding: '0.75rem 1rem',
+            borderRadius: 'var(--radius-sm)',
             marginBottom: '1.5rem',
             color: 'var(--danger-color)',
             fontSize: '0.85rem'
@@ -99,10 +99,10 @@ export default function Login() {
           <div className="form-group">
             <label htmlFor="username">Username atau Email</label>
             <div style={{ position: 'relative' }}>
-              <User size={16} style={{ 
-                position: 'absolute', 
-                left: '12px', 
-                top: '50%', 
+              <User size={16} style={{
+                position: 'absolute',
+                left: '12px',
+                top: '50%',
                 transform: 'translateY(-50%)',
                 color: 'var(--text-muted)'
               }} />
@@ -122,10 +122,10 @@ export default function Login() {
           <div className="form-group">
             <label htmlFor="password">Password</label>
             <div style={{ position: 'relative' }}>
-              <Lock size={16} style={{ 
-                position: 'absolute', 
-                left: '12px', 
-                top: '50%', 
+              <Lock size={16} style={{
+                position: 'absolute',
+                left: '12px',
+                top: '50%',
                 transform: 'translateY(-50%)',
                 color: 'var(--text-muted)'
               }} />
@@ -141,13 +141,13 @@ export default function Login() {
             </div>
           </div>
 
-          <button 
-            type="submit" 
-            className="btn btn-primary" 
-            style={{ 
-              width: '100%', 
-              padding: '0.75rem', 
-              marginTop: '0.5rem', 
+          <button
+            type="submit"
+            className="btn btn-primary"
+            style={{
+              width: '100%',
+              padding: '0.75rem',
+              marginTop: '0.5rem',
               gap: '0.5rem',
               fontSize: '0.9rem',
               fontWeight: '600'
@@ -156,7 +156,7 @@ export default function Login() {
           >
             {loading ? (
               <>
-                <span style={{ 
+                <span style={{
                   display: 'inline-block',
                   width: '16px',
                   height: '16px',
@@ -173,10 +173,10 @@ export default function Login() {
           </button>
         </form>
 
-        <div style={{ 
-          textAlign: 'center', 
-          marginTop: '1.75rem', 
-          color: 'var(--text-muted)', 
+        <div style={{
+          textAlign: 'center',
+          marginTop: '1.75rem',
+          color: 'var(--text-muted)',
           fontSize: '0.72rem',
           borderTop: '1px solid var(--border-color)',
           paddingTop: '1rem',

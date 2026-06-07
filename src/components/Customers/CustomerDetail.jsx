@@ -159,7 +159,7 @@ export default function CustomerDetail({ customerId, onBack }) {
       {/* PRINT-ONLY HEADER BLOCK */}
       <div className="print-only print-header">
         <h1 style={{ color: 'black', textAlign: 'center', fontSize: '20pt', margin: 0 }}>LAPORAN BUKU BESAR BULANAN</h1>
-        <p style={{ color: 'black', textAlign: 'center', margin: '5px 0 20px 0' }}>HL Sales & Receivables Management App</p>
+        <p style={{ color: 'black', textAlign: 'center', margin: '5px 0 20px 0' }}>HL Internal Finance App</p>
         
         <table style={{ width: '100%', marginBottom: '20px', borderCollapse: 'collapse' }}>
           <tbody>

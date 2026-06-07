@@ -237,312 +237,346 @@ export default function TransactionForm({ editTxId, onSaveSuccess }) {
       )}
 
       <form onSubmit={handleSave}>
-        <div className="grid-2">
-          {/* LEFT COLUMN: PRIMARY INFO */}
-          <div className="glass-card card-accent-indigo" style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
-            <h2>Informasi Nota</h2>
+        {/* STEP 1: PILIH PELANGGAN & INFO NOTA */}
+        <div className="form-step-container">
+          <div className="form-step-badge">1</div>
+          <div className="form-step-content">
+            <div className="glass-card card-accent-indigo" style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+              <h2>Langkah 1: Pilih Pelanggan & Info Nota</h2>
 
-            <div className="form-group">
-              <label htmlFor="txDate">Tanggal Nota *</label>
-              <input
-                id="txDate"
-                type="date"
-                value={date}
-                onChange={(e) => setDate(e.target.value)}
-                required
-                disabled={submitting}
-              />
-            </div>
-
-            <div className="form-group">
-              <label htmlFor="txBonNo">Nomor Bon *</label>
-              <div style={{ display: 'flex', gap: '0.5rem' }}>
+              <div className="form-group">
+                <label htmlFor="txDate">Tanggal Nota *</label>
                 <input
-                  id="txBonNo"
-                  type="text"
-                  value={bonNo}
-                  onChange={(e) => setBonNo(e.target.value)}
-                  placeholder="Masukkan nomor unik"
-                  required
-                  disabled={submitting}
-                />
-                <button
-                  type="button"
-                  onClick={handleRegenBonNo}
-                  className="btn btn-secondary"
-                  title="Generate ID Baru"
-                  disabled={submitting}
-                >
-                  <RefreshCw size={16} />
-                </button>
-              </div>
-            </div>
-
-            <div className="form-group">
-              <label htmlFor="txCustomer">Pilih Pelanggan *</label>
-              <select
-                id="txCustomer"
-                value={customerId}
-                onChange={(e) => setCustomerId(e.target.value)}
-                required
-                disabled={!!editTxId || submitting}
-              >
-                <option value="">-- Pilih Pelanggan --</option>
-                {activeCustomers.map((c) => (
-                  <option key={c.id} value={c.id}>
-                    {c.name}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            {/* BONUS TOGGLE MECHANIC (AC-5) */}
-            {customerId && (
-              <div style={{ background: 'var(--bg-secondary)', padding: '1rem', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color)' }}>
-                <div className="toggle-container" style={{ marginBottom: isBonus ? '1rem' : '0' }}>
-                  <input
-                    type="checkbox"
-                    id="txIsBonus"
-                    checked={isBonus}
-                    onChange={(e) => setIsBonus(e.target.checked)}
-                    style={{ display: 'none' }}
-                    disabled={submitting}
-                  />
-                  <div className="toggle-switch"></div>
-                  <label htmlFor="txIsBonus" style={{ cursor: 'pointer', fontWeight: '600', color: 'var(--text-primary)' }}>
-                    Transaksi ini adalah BONUS
-                  </label>
-                </div>
-
-                {isBonus && (
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', animation: 'fadeIn 0.2s' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--warning-color)', fontSize: '0.9rem' }}>
-                      <Award size={16} />
-                      <span>
-                        Tersedia <strong>{bonusStats?.bonusesAvailable || 0}</strong> bonus untuk diklaim.
-                      </span>
-                    </div>
-                    <div className="form-group" style={{ marginTop: '0.5rem' }}>
-                      <label htmlFor="txBonusCount">Jumlah Bonus Dikonsumsi</label>
-                      <input
-                        id="txBonusCount"
-                        type="number"
-                        min="1"
-                        value={bonusCount}
-                        onChange={(e) => setBonusCount(e.target.value)}
-                        required
-                        disabled={submitting}
-                      />
-                      <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
-                        Setiap bonus yang dikonsumsi akan mengurangi 1 threshold lunas.
-                      </span>
-                    </div>
-                  </div>
-                )}
-              </div>
-            )}
-          </div>
-
-          {/* RIGHT COLUMN: ADDITIONAL PARAMS */}
-          <div className="glass-card card-accent-accent" style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
-            <h2>Metode Pembayaran & Ongkir</h2>
-
-            <div className="form-group">
-              <label htmlFor="txOngkir">Ongkos Kirim (Ongkir) *</label>
-              <input
-                id="txOngkir"
-                type="number"
-                value={ongkir}
-                onChange={(e) => setOngkir(e.target.value)}
-                placeholder="Contoh: 150000"
-                min="0"
-                required
-                disabled={submitting}
-              />
-              <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>
-                Ongkir dibebankan langsung ke pelanggan (tidak dimasukkan dalam Laba HL).
-              </span>
-            </div>
-
-            <div className="form-group">
-              <label htmlFor="txStatus">Status Transaksi *</label>
-              <select
-                id="txStatus"
-                value={status}
-                onChange={(e) => setStatus(e.target.value)}
-                required
-                disabled={submitting}
-              >
-                <option value="Piutang">Piutang (Belum Bayar)</option>
-                <option value="Lunas">Lunas (Sudah Bayar)</option>
-              </select>
-            </div>
-
-            {status === 'Lunas' && (
-              <div className="form-group" style={{ animation: 'fadeIn 0.2s' }}>
-                <label htmlFor="txPaymentDate">Tanggal Pelunasan *</label>
-                <input
-                  id="txPaymentDate"
+                  id="txDate"
                   type="date"
-                  value={paymentDate}
-                  onChange={(e) => setPaymentDate(e.target.value)}
+                  value={date}
+                  onChange={(e) => setDate(e.target.value)}
                   required
                   disabled={submitting}
                 />
               </div>
-            )}
 
-            <div className="form-group">
-              <label htmlFor="txDesc">Keterangan Tambahan</label>
-              <textarea
-                id="txDesc"
-                rows="3"
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
-                placeholder="Tulis detail proyek, alamat kirim, dsb..."
-                disabled={submitting}
-              />
-            </div>
-          </div>
-        </div>
-
-        {/* LINE ITEMS BLOCK */}
-        <div className="glass-card card-accent-success" style={{ marginTop: '2rem', marginBottom: '2rem' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
-            <h2>Baris Produk</h2>
-            <button
-              type="button"
-              onClick={handleAddLine}
-              className="btn btn-secondary btn-sm"
-              disabled={!customerId || activeProducts.length === 0 || submitting}
-            >
-              <Plus size={16} /> Tambah Barang
-            </button>
-          </div>
-
-          {!customerId ? (
-            <div style={{ textAlign: 'center', padding: '1.5rem', color: 'var(--text-secondary)', background: 'var(--bg-secondary)', borderRadius: 'var(--radius-sm)', border: '1px dashed var(--border-color)' }}>
-              Silakan pilih pelanggan terlebih dahulu untuk memuat diskon cascading mereka.
-            </div>
-          ) : activeProducts.length === 0 ? (
-            <div style={{ textAlign: 'center', padding: '1.5rem', color: 'var(--text-secondary)', background: 'var(--bg-secondary)', borderRadius: 'var(--radius-sm)', border: '1px dashed var(--border-color)' }}>
-              Belum ada produk terdaftar di database.
-            </div>
-          ) : lines.length === 0 ? (
-            <div style={{ textAlign: 'center', padding: '1.5rem', color: 'var(--text-secondary)', background: 'var(--bg-secondary)', borderRadius: 'var(--radius-sm)', border: '1px dashed var(--border-color)' }}>
-              Klik tombol 'Tambah Barang' untuk menyusun daftar pesanan.
-            </div>
-          ) : (
-            <div style={{ display: 'flex', flexDirection: 'column' }}>
-              <div style={{ display: 'grid', gridTemplateColumns: '2.5fr 1fr 1.5fr 1.5fr 1.5fr 1.5fr auto', gap: '0.75rem', padding: '0.5rem 0.75rem', color: 'var(--text-secondary)', fontSize: '0.85rem', fontWeight: '500' }}>
-                <span>Pilih Produk</span>
-                <span>Tipe</span>
-                <span style={{ textAlign: 'right' }}>Harga Base</span>
-                <span>Diskon Profil</span>
-                <span style={{ textAlign: 'right' }}>Harga Bersih</span>
-                <span style={{ textAlign: 'right' }}>Qty</span>
-                <span style={{ textAlign: 'right' }}>Subtotal</span>
-                <span></span>
-              </div>
-              
-              {calculatedLines.map((line, idx) => (
-                <div key={idx} className="tx-line-item" style={{ 
-                  display: 'grid', 
-                  gridTemplateColumns: '2.5fr 1fr 1.5fr 1.5fr 1.5fr 1.5fr auto', 
-                  gap: '0.75rem', 
-                  alignItems: 'center',
-                  marginBottom: '0.5rem'
-                }}>
-                  <select
-                    value={line.productId}
-                    onChange={(e) => handleLineChange(idx, 'productId', e.target.value)}
-                    required
-                    disabled={submitting}
-                  >
-                    {activeProducts.map((p) => (
-                      <option key={p.id} value={p.id}>
-                        {p.name}
-                      </option>
-                    ))}
-                  </select>
-
-                  <div>
-                    <span className={`badge ${line.type === 'LM' ? 'badge-primary' : 'badge-info'}`}>
-                      {line.type}
-                    </span>
-                  </div>
-
-                  <div style={{ textAlign: 'right', fontSize: '0.95rem' }}>
-                    {formatIDR(line.priceBase)}
-                  </div>
-
-                  <div style={{ fontSize: '0.85rem' }}>
-                    <div style={{ display: 'flex', gap: '2px', flexWrap: 'wrap' }}>
-                      {line.discounts && line.discounts.map((d, i) => (
-                        <span key={i} style={{ background: 'var(--bg-primary)', padding: '2px 4px', border: '1px solid var(--border-color)', borderRadius: '2px' }}>
-                          {d}%
-                        </span>
-                      ))}
-                      {(!line.discounts || line.discounts.length === 0) && '-'}
-                    </div>
-                  </div>
-
-                  <div style={{ textAlign: 'right', fontSize: '0.95rem', fontWeight: '500' }}>
-                    {formatIDR(line.priceDiscounted)}
-                  </div>
-
+              <div className="form-group">
+                <label htmlFor="txBonNo">Nomor Bon *</label>
+                <div style={{ display: 'flex', gap: '0.5rem' }}>
                   <input
-                    type="number"
-                    value={line.qty}
-                    onChange={(e) => handleLineChange(idx, 'qty', e.target.value)}
-                    min="1"
+                    id="txBonNo"
+                    type="text"
+                    value={bonNo}
+                    onChange={(e) => setBonNo(e.target.value)}
+                    placeholder="Masukkan nomor unik"
                     required
                     disabled={submitting}
-                    style={{ textAlign: 'right' }}
                   />
-
-                  <div style={{ textAlign: 'right', fontSize: '0.95rem', fontWeight: '700' }}>
-                    {formatIDR(line.total)}
-                  </div>
-
                   <button
                     type="button"
-                    onClick={() => handleRemoveLine(idx)}
-                    className="btn btn-secondary btn-sm"
-                    style={{ padding: '0.35rem', color: 'var(--danger-color)', borderColor: 'rgba(239, 68, 68, 0.2)' }}
+                    onClick={handleRegenBonNo}
+                    className="btn btn-secondary"
+                    title="Generate ID Baru"
                     disabled={submitting}
                   >
-                    <Trash2 size={14} />
+                    <RefreshCw size={16} />
                   </button>
                 </div>
-              ))}
+              </div>
+
+              <div className="form-group">
+                <label htmlFor="txCustomer">Pilih Pelanggan *</label>
+                <select
+                  id="txCustomer"
+                  value={customerId}
+                  onChange={(e) => setCustomerId(e.target.value)}
+                  required
+                  disabled={!!editTxId || submitting}
+                >
+                  <option value="">-- Pilih Pelanggan --</option>
+                  {activeCustomers.map((c) => (
+                    <option key={c.id} value={c.id}>
+                      {c.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              {/* BONUS TOGGLE MECHANIC (AC-5) */}
+              {customerId && (
+                <div style={{ background: 'var(--bg-secondary)', padding: '1rem', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color)' }}>
+                  <div className="toggle-container" style={{ marginBottom: isBonus ? '1rem' : '0' }}>
+                    <input
+                      type="checkbox"
+                      id="txIsBonus"
+                      checked={isBonus}
+                      onChange={(e) => setIsBonus(e.target.checked)}
+                      style={{ display: 'none' }}
+                      disabled={submitting}
+                    />
+                    <div className="toggle-switch"></div>
+                    <label htmlFor="txIsBonus" style={{ cursor: 'pointer', fontWeight: '600', color: 'var(--text-primary)' }}>
+                      Transaksi ini adalah BONUS
+                    </label>
+                  </div>
+
+                  {isBonus && (
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', animation: 'fadeIn 0.2s' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--warning-color)', fontSize: '0.9rem' }}>
+                        <Award size={16} />
+                        <span>
+                          Tersedia <strong>{bonusStats?.bonusesAvailable || 0}</strong> bonus untuk diklaim.
+                        </span>
+                      </div>
+                      <div className="form-group" style={{ marginTop: '0.5rem' }}>
+                        <label htmlFor="txBonusCount">Jumlah Bonus Dikonsumsi</label>
+                        <input
+                          id="txBonusCount"
+                          type="number"
+                          min="1"
+                          value={bonusCount}
+                          onChange={(e) => setBonusCount(e.target.value)}
+                          required
+                          disabled={submitting}
+                        />
+                        <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
+                          Setiap bonus yang dikonsumsi akan mengurangi 1 threshold lunas.
+                        </span>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
-          )}
+          </div>
         </div>
 
-        {/* BOTTOM TOTAL SUMMARY BOX */}
-        {lines.length > 0 && customerId && (
-          <div className="glass-card card-accent-warning" style={{ display: 'flex', justifyContent: 'flex-end', gap: '3rem', alignItems: 'center', marginBottom: '2rem' }}>
-            <div style={{ display: 'flex', gap: '2rem' }}>
-              <div style={{ textAlign: 'right' }}>
-                <span style={{ color: 'var(--text-secondary)', fontSize: '0.85rem' }}>Subtotal Omzet:</span>
-                <div style={{ fontSize: '1.25rem', fontWeight: '600' }}>{formatIDR(totalOmzet)}</div>
+        {/* STEP 2: METODE PEMBAYARAN & ONGKIR */}
+        <div className="form-step-container">
+          <div className="form-step-badge" style={{ backgroundColor: 'var(--accent-color)' }}>2</div>
+          <div className="form-step-content">
+            <div className="glass-card card-accent-accent" style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+              <h2>Langkah 2: Pengiriman & Status Pembayaran</h2>
+
+              <div className="form-group">
+                <label htmlFor="txOngkir">Ongkos Kirim (Ongkir) *</label>
+                <input
+                  id="txOngkir"
+                  type="number"
+                  value={ongkir}
+                  onChange={(e) => setOngkir(e.target.value)}
+                  placeholder="Contoh: 150000"
+                  min="0"
+                  required
+                  disabled={submitting}
+                />
+                <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>
+                  Ongkir dibebankan langsung ke pelanggan (tidak dimasukkan dalam Laba HL).
+                </span>
               </div>
-              <div style={{ textAlign: 'right' }}>
-                <span style={{ color: 'var(--text-secondary)', fontSize: '0.85rem' }}>Ongkir:</span>
-                <div style={{ fontSize: '1.25rem', fontWeight: '600' }}>{formatIDR(ongkir)}</div>
+
+              <div className="form-group">
+                <label htmlFor="txStatus">Status Transaksi *</label>
+                <select
+                  id="txStatus"
+                  value={status}
+                  onChange={(e) => setStatus(e.target.value)}
+                  required
+                  disabled={submitting}
+                >
+                  <option value="Piutang">Piutang (Belum Bayar)</option>
+                  <option value="Lunas">Lunas (Sudah Bayar)</option>
+                </select>
               </div>
-              <div style={{ textAlign: 'right', borderLeft: '1px solid var(--border-color)', paddingLeft: '2rem' }}>
-                <span style={{ color: 'var(--text-secondary)', fontSize: '0.85rem' }}>Total Tagihan (Piutang):</span>
-                <div style={{ fontSize: '1.5rem', fontWeight: '700', color: 'var(--warning-color)' }}>{formatIDR(totalOwed)}</div>
+
+              {status === 'Lunas' && (
+                <div className="form-group" style={{ animation: 'fadeIn 0.2s' }}>
+                  <label htmlFor="txPaymentDate">Tanggal Pelunasan *</label>
+                  <input
+                    id="txPaymentDate"
+                    type="date"
+                    value={paymentDate}
+                    onChange={(e) => setPaymentDate(e.target.value)}
+                    required
+                    disabled={submitting}
+                  />
+                </div>
+              )}
+
+              <div className="form-group">
+                <label htmlFor="txDesc">Keterangan Tambahan</label>
+                <textarea
+                  id="txDesc"
+                  rows="3"
+                  value={description}
+                  onChange={(e) => setDescription(e.target.value)}
+                  placeholder="Tulis detail proyek, alamat kirim, dsb..."
+                  disabled={submitting}
+                />
               </div>
             </div>
-            
-            <button type="submit" className="btn btn-primary btn-sm" style={{ padding: '1rem 2rem', fontSize: '1rem' }} disabled={submitting}>
-              <Save size={18} /> {submitting ? 'Menyimpan...' : editTxId ? 'Perbarui Nota' : 'Simpan Transaksi'}
-            </button>
           </div>
-        )}
+        </div>
+
+        {/* STEP 3: MASUKKAN DAFTAR BARANG */}
+        <div className="form-step-container">
+          <div className="form-step-badge" style={{ backgroundColor: 'var(--success-color)' }}>3</div>
+          <div className="form-step-content">
+            <div className="glass-card card-accent-success">
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+                <h2>Langkah 3: Masukkan Daftar Barang</h2>
+                <button
+                  type="button"
+                  onClick={handleAddLine}
+                  className="btn btn-secondary btn-sm"
+                  disabled={!customerId || activeProducts.length === 0 || submitting}
+                >
+                  <Plus size={16} /> Tambah Barang
+                </button>
+              </div>
+
+              {!customerId ? (
+                <div style={{ textAlign: 'center', padding: '1.5rem', color: 'var(--text-secondary)', background: 'var(--bg-secondary)', borderRadius: 'var(--radius-sm)', border: '1px dashed var(--border-color)' }}>
+                  Silakan pilih pelanggan terlebih dahulu di Langkah 1 untuk memuat diskon cascading mereka.
+                </div>
+              ) : activeProducts.length === 0 ? (
+                <div style={{ textAlign: 'center', padding: '1.5rem', color: 'var(--text-secondary)', background: 'var(--bg-secondary)', borderRadius: 'var(--radius-sm)', border: '1px dashed var(--border-color)' }}>
+                  Belum ada produk terdaftar di database.
+                </div>
+              ) : lines.length === 0 ? (
+                <div style={{ textAlign: 'center', padding: '1.5rem', color: 'var(--text-secondary)', background: 'var(--bg-secondary)', borderRadius: 'var(--radius-sm)', border: '1px dashed var(--border-color)' }}>
+                  Klik tombol 'Tambah Barang' di atas untuk menyusun daftar pesanan.
+                </div>
+              ) : (
+                <div className="table-wrapper table-responsive-cards" style={{ display: 'flex', flexDirection: 'column' }}>
+                  <div style={{ display: 'grid', gridTemplateColumns: '2.5fr 1fr 1.5fr 1.5fr 1.5fr 1.5fr auto', gap: '0.75rem', padding: '0.5rem 0.75rem', color: 'var(--text-secondary)', fontSize: '0.85rem', fontWeight: '500' }}>
+                    <span>Pilih Produk</span>
+                    <span>Tipe</span>
+                    <span style={{ textAlign: 'right' }}>Harga Base</span>
+                    <span>Diskon Profil</span>
+                    <span style={{ textAlign: 'right' }}>Harga Bersih</span>
+                    <span style={{ textAlign: 'right' }}>Qty</span>
+                    <span style={{ textAlign: 'right' }}>Subtotal</span>
+                    <span></span>
+                  </div>
+                  
+                  {calculatedLines.map((line, idx) => (
+                    <div key={idx} className="tx-line-item" style={{ 
+                      display: 'grid', 
+                      gridTemplateColumns: '2.5fr 1fr 1.5fr 1.5fr 1.5fr 1.5fr auto', 
+                      gap: '0.75rem', 
+                      alignItems: 'center',
+                      marginBottom: '0.5rem'
+                    }}>
+                      <select
+                        value={line.productId}
+                        onChange={(e) => handleLineChange(idx, 'productId', e.target.value)}
+                        required
+                        disabled={submitting}
+                      >
+                        {activeProducts.map((p) => (
+                          <option key={p.id} value={p.id}>
+                            {p.name}
+                          </option>
+                        ))}
+                      </select>
+
+                      <div>
+                        <span className={`badge ${line.type === 'LM' ? 'badge-primary' : 'badge-info'}`}>
+                          {line.type}
+                        </span>
+                      </div>
+
+                      <div style={{ textAlign: 'right', fontSize: '0.95rem' }}>
+                        {formatIDR(line.priceBase)}
+                      </div>
+
+                      <div style={{ fontSize: '0.85rem' }}>
+                        <div style={{ display: 'flex', gap: '2px', flexWrap: 'wrap' }}>
+                          {line.discounts && line.discounts.map((d, i) => (
+                            <span key={i} style={{ background: 'var(--bg-primary)', padding: '2px 4px', border: '1px solid var(--border-color)', borderRadius: '2px' }}>
+                              {d}%
+                            </span>
+                          ))}
+                          {(!line.discounts || line.discounts.length === 0) && '-'}
+                        </div>
+                      </div>
+
+                      <div style={{ textAlign: 'right', fontSize: '0.95rem', fontWeight: '500' }}>
+                        {formatIDR(line.priceDiscounted)}
+                      </div>
+
+                      <input
+                        type="number"
+                        value={line.qty}
+                        onChange={(e) => handleLineChange(idx, 'qty', e.target.value)}
+                        min="1"
+                        required
+                        disabled={submitting}
+                        style={{ textAlign: 'right' }}
+                      />
+
+                      <div style={{ textAlign: 'right', fontSize: '0.95rem', fontWeight: '700' }}>
+                        {formatIDR(line.total)}
+                      </div>
+
+                      <button
+                        type="button"
+                        onClick={() => handleRemoveLine(idx)}
+                        className="btn btn-secondary btn-sm"
+                        style={{ padding: '0.35rem', color: 'var(--danger-color)', borderColor: 'rgba(239, 68, 68, 0.2)' }}
+                        disabled={submitting}
+                      >
+                        <Trash2 size={14} />
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+
+        {/* STEP 4: TOTAL & SAVE */}
+        <div className="form-step-container">
+          <div className="form-step-badge" style={{ backgroundColor: 'var(--warning-color)' }}>4</div>
+          <div className="form-step-content">
+            <div className="glass-card card-accent-warning">
+              <h2>Langkah 4: Selesaikan Nota</h2>
+              
+              {!customerId || lines.length === 0 ? (
+                <div style={{ color: 'var(--text-secondary)', padding: '1rem 0' }}>
+                  Silakan pilih pelanggan dan tambahkan produk terlebih dahulu untuk menyelesaikan nota.
+                </div>
+              ) : (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem', marginTop: '1rem' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap', gap: '2rem', borderBottom: '1px solid var(--border-color)', paddingBottom: '1.5rem' }}>
+                    <div style={{ minWidth: '150px' }}>
+                      <span style={{ color: 'var(--text-secondary)', fontSize: '0.85rem', display: 'block', marginBottom: '0.25rem' }}>Subtotal Omzet:</span>
+                      <div style={{ fontSize: '1.35rem', fontWeight: '600' }}>{formatIDR(totalOmzet)}</div>
+                    </div>
+                    <div style={{ minWidth: '150px' }}>
+                      <span style={{ color: 'var(--text-secondary)', fontSize: '0.85rem', display: 'block', marginBottom: '0.25rem' }}>Ongkos Kirim:</span>
+                      <div style={{ fontSize: '1.35rem', fontWeight: '600' }}>{formatIDR(ongkir)}</div>
+                    </div>
+                    <div style={{ minWidth: '200px', borderLeft: '2px solid var(--border-color)', paddingLeft: '1.5rem' }}>
+                      <span style={{ color: 'var(--text-secondary)', fontSize: '0.85rem', display: 'block', marginBottom: '0.25rem' }}>Total Tagihan (Piutang):</span>
+                      <div style={{ fontSize: '1.75rem', fontWeight: '800', color: 'var(--warning-color)' }}>{formatIDR(totalOwed)}</div>
+                    </div>
+                  </div>
+                  
+                  <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '1rem' }}>
+                    <button 
+                      type="submit" 
+                      className="btn btn-primary" 
+                      style={{ padding: '1rem 2.5rem', fontSize: '1.1rem', display: 'inline-flex', alignItems: 'center', gap: '0.5rem', width: 'auto' }} 
+                      disabled={submitting}
+                    >
+                      <Save size={20} />
+                      {submitting ? 'Menyimpan...' : editTxId ? 'Simpan Perubahan Nota' : 'Simpan Transaksi Baru'}
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
       </form>
     </div>
   );
