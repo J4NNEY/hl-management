@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import { useDatabase } from '../../context/DatabaseContext';
-import { Lock, User, AlertTriangle, Shield } from 'lucide-react';
+import { Lock, User, AlertTriangle, Shield, Eye, EyeOff, CheckCircle } from 'lucide-react';
 
 export default function Login() {
   const { login } = useDatabase();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
@@ -40,149 +41,178 @@ export default function Login() {
 
   return (
     <div className="auth-wrapper">
-      <div className="glass-card modal-content" style={{
-        maxWidth: '420px',
-        padding: '2.5rem',
-        position: 'relative',
-        zIndex: 1,
-        background: 'var(--bg-card)',
-        boxShadow: 'var(--shadow-xl), 0 0 0 1px rgba(0, 0, 0, 0.05)'
-      }}>
-        {/* Brand Logo */}
-        <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
-          <div style={{
-            width: '56px',
-            height: '56px',
-            borderRadius: '12px',
-            background: 'var(--primary-color)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            margin: '0 auto 1rem',
-            boxShadow: '0 4px 12px rgba(15, 41, 66, 0.15)'
-          }}>
-            <Shield size={28} color="white" />
+      <div className="login-container">
+        {/* LEFT GRAPHIC PANEL */}
+        <div className="login-graphic">
+          <div className="login-graphic-logo">
+            <Shield size={24} />
+            <span>HL Internal Finance</span>
           </div>
-          <h1 style={{
-            fontSize: '1.65rem',
-            fontWeight: '800',
-            color: '#0f172a',
-            letterSpacing: '-0.5px',
-            marginBottom: '0.25rem'
-          }}>
-            HL Sales App
-          </h1>
-          <p style={{ color: 'var(--text-muted)', fontSize: '0.85rem' }}>
-            Cloud Management System
-          </p>
+
+          <div className="login-graphic-content">
+            <h1 className="login-graphic-title">Sistem Keuangan Internal HL</h1>
+            <p className="login-graphic-subtitle">
+              Kelola data pelanggan, diskon bertingkat (LM & BR), bonus omzet lunas, dan pembukuan piutang secara real-time.
+            </p>
+
+            <div className="login-feature-list">
+              <div className="login-feature-item">
+                <div className="login-feature-icon">
+                  <CheckCircle size={18} />
+                </div>
+                <div className="login-feature-text">
+                  <strong>Akurasi Diskon Cascading</strong>
+                  <span>Diskon LM & BR bertingkat dihitung otomatis tanpa kalkulator manual.</span>
+                </div>
+              </div>
+
+              <div className="login-feature-item">
+                <div className="login-feature-icon">
+                  <CheckCircle size={18} />
+                </div>
+                <div className="login-feature-text">
+                  <strong>Akumulasi Bonus Omzet</strong>
+                  <span>Batasan kelayakan bonus terintegrasi langsung dengan status lunas transaksi.</span>
+                </div>
+              </div>
+
+              <div className="login-feature-item">
+                <div className="login-feature-icon">
+                  <CheckCircle size={18} />
+                </div>
+                <div className="login-feature-text">
+                  <strong>Keamanan & Integrasi Cloud</strong>
+                  <span>Terkoneksi langsung ke Supabase Cloud untuk perlindungan data maksimal.</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="login-graphic-footer">
+            Copyright &copy; 2026 HL. All rights reserved.
+          </div>
         </div>
 
-        {error && (
-          <div style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: '0.75rem',
-            backgroundColor: 'var(--danger-bg)',
-            border: '1px solid rgba(220, 38, 38, 0.15)',
-            padding: '0.75rem 1rem',
-            borderRadius: 'var(--radius-sm)',
-            marginBottom: '1.5rem',
-            color: 'var(--danger-color)',
-            fontSize: '0.85rem'
-          }}>
-            <AlertTriangle size={16} style={{ flexShrink: 0 }} />
-            <span>{error}</span>
+        {/* RIGHT FORM PANEL */}
+        <div className="login-form-pane">
+          <div style={{ marginBottom: '2rem' }}>
+            <h2 style={{ fontSize: '1.75rem', fontWeight: '800', color: 'var(--text-primary)', marginBottom: '0.5rem', letterSpacing: '-0.5px' }}>
+              Selamat Datang
+            </h2>
+            <p style={{ color: 'var(--text-muted)', fontSize: '0.88rem' }}>
+              Silakan masukkan kredensial untuk mengakses aplikasi.
+            </p>
           </div>
-        )}
 
-        <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1.15rem' }}>
-          <div className="form-group">
-            <label htmlFor="username">Username atau Email</label>
-            <div style={{ position: 'relative' }}>
-              <User size={16} style={{
-                position: 'absolute',
-                left: '12px',
-                top: '50%',
-                transform: 'translateY(-50%)',
-                color: 'var(--text-muted)'
-              }} />
-              <input
-                id="username"
-                type="text"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                placeholder="Masukkan username"
-                style={{ paddingLeft: '2.5rem' }}
-                autoComplete="off"
-                disabled={loading}
-              />
+          {error && (
+            <div style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.75rem',
+              backgroundColor: 'var(--danger-glow)',
+              border: '1px solid rgba(220, 38, 38, 0.15)',
+              padding: '0.75rem 1rem',
+              borderRadius: 'var(--radius-sm)',
+              marginBottom: '1.5rem',
+              color: 'var(--danger-color)',
+              fontSize: '0.88rem',
+              fontWeight: '500'
+            }}>
+              <AlertTriangle size={18} style={{ flexShrink: 0 }} />
+              <span>{error}</span>
             </div>
-          </div>
+          )}
 
-          <div className="form-group">
-            <label htmlFor="password">Password</label>
-            <div style={{ position: 'relative' }}>
-              <Lock size={16} style={{
-                position: 'absolute',
-                left: '12px',
-                top: '50%',
-                transform: 'translateY(-50%)',
-                color: 'var(--text-muted)'
-              }} />
-              <input
-                id="password"
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="Masukkan password"
-                style={{ paddingLeft: '2.5rem' }}
-                disabled={loading}
-              />
+          <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+            <div className="form-group">
+              <label htmlFor="username" style={{ fontWeight: '600' }}>Username atau Email</label>
+              <div style={{ position: 'relative' }}>
+                <User size={18} style={{
+                  position: 'absolute',
+                  left: '12px',
+                  top: '50%',
+                  transform: 'translateY(-50%)',
+                  color: 'var(--text-muted)'
+                }} />
+                <input
+                  id="username"
+                  type="text"
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
+                  placeholder="Contoh: admin@hl.com"
+                  style={{ paddingLeft: '2.5rem', height: '44px', fontSize: '1rem' }}
+                  autoComplete="off"
+                  disabled={loading}
+                />
+              </div>
             </div>
-          </div>
 
-          <button
-            type="submit"
-            className="btn btn-primary"
-            style={{
-              width: '100%',
-              padding: '0.75rem',
-              marginTop: '0.5rem',
-              gap: '0.5rem',
-              fontSize: '0.9rem',
-              fontWeight: '600'
-            }}
-            disabled={loading}
-          >
-            {loading ? (
-              <>
-                <span style={{
-                  display: 'inline-block',
-                  width: '16px',
-                  height: '16px',
-                  border: '2px solid rgba(255,255,255,0.3)',
-                  borderTopColor: 'white',
-                  borderRadius: '50%',
-                  animation: 'spin 1s linear infinite'
-                }}></span>
-                Menghubungkan...
-              </>
-            ) : (
-              'Masuk ke Aplikasi'
-            )}
-          </button>
-        </form>
+            <div className="form-group">
+              <label htmlFor="password" style={{ fontWeight: '600' }}>Password</label>
+              <div style={{ position: 'relative' }}>
+                <Lock size={18} style={{
+                  position: 'absolute',
+                  left: '12px',
+                  top: '50%',
+                  transform: 'translateY(-50%)',
+                  color: 'var(--text-muted)'
+                }} />
+                <input
+                  id="password"
+                  type={showPassword ? 'text' : 'password'}
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="Masukkan password Anda"
+                  style={{ paddingLeft: '2.5rem', paddingRight: '2.5rem', height: '44px', fontSize: '1rem' }}
+                  disabled={loading}
+                />
+                <button
+                  type="button"
+                  className="password-toggle-btn"
+                  onClick={() => setShowPassword(!showPassword)}
+                  title={showPassword ? "Sembunyikan password" : "Tampilkan password"}
+                  disabled={loading}
+                >
+                  {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                </button>
+              </div>
+            </div>
 
-        <div style={{
-          textAlign: 'center',
-          marginTop: '1.75rem',
-          color: 'var(--text-muted)',
-          fontSize: '0.72rem',
-          borderTop: '1px solid var(--border-color)',
-          paddingTop: '1rem',
-          letterSpacing: '0.02em'
-        }}>
-          Terkoneksi dengan Supabase Cloud
+            <button
+              type="submit"
+              className="btn btn-primary"
+              style={{
+                width: '100%',
+                padding: '0.85rem',
+                marginTop: '0.5rem',
+                gap: '0.5rem',
+                fontSize: '1rem',
+                fontWeight: '600',
+                height: '46px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center'
+              }}
+              disabled={loading}
+            >
+              {loading ? (
+                <>
+                  <span className="spinner-auth" style={{
+                    display: 'inline-block',
+                    width: '18px',
+                    height: '18px',
+                    border: '2.5px solid rgba(255,255,255,0.3)',
+                    borderTopColor: 'white',
+                    borderRadius: '50%',
+                    animation: 'spin 1s linear infinite'
+                  }}></span>
+                  <span>Menghubungkan...</span>
+                </>
+              ) : (
+                'Masuk ke Aplikasi'
+              )}
+            </button>
+          </form>
         </div>
       </div>
 

@@ -105,10 +105,197 @@ body {
   align-items: center;
   justify-content: center;
   min-height: 100vh;
-  background-color: #0f172a;
+  background-color: #0b111e;
   padding: 1.5rem;
   position: relative;
   overflow: hidden;
+}
+
+/* ============================================
+   SPLIT PANEL LOGIN DESIGN
+   ============================================ */
+.login-container {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  width: 1000px;
+  max-width: 100%;
+  min-height: 640px;
+  background-color: var(--bg-card);
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--border-color);
+  animation: fadeIn var(--transition-normal) ease-in-out;
+}
+
+.login-graphic {
+  background-color: #0a1727;
+  background-image: radial-gradient(circle at 10% 20%, rgba(56, 189, 248, 0.15) 0%, transparent 50%),
+                    radial-gradient(circle at 90% 80%, rgba(6, 182, 212, 0.08) 0%, transparent 50%);
+  padding: 3.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  color: #ffffff;
+  position: relative;
+  border-right: 1px solid var(--border-color);
+}
+
+.login-graphic::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(15, 41, 66, 0.2) 0%, rgba(15, 23, 42, 0.6) 100%);
+  z-index: 0;
+}
+
+.login-graphic-logo {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-weight: 800;
+  font-size: 1.35rem;
+  letter-spacing: -0.5px;
+  z-index: 1;
+  color: #38bdf8;
+}
+
+.login-graphic-content {
+  margin-top: auto;
+  margin-bottom: auto;
+  z-index: 1;
+  position: relative;
+}
+
+.login-graphic-title {
+  font-size: 2.15rem;
+  font-weight: 800;
+  line-height: 1.25;
+  margin-bottom: 1rem;
+  letter-spacing: -1px;
+  color: #ffffff;
+}
+
+.login-graphic-subtitle {
+  font-size: 1.05rem;
+  color: #94a3b8;
+  line-height: 1.6;
+  margin-bottom: 2.5rem;
+}
+
+.login-feature-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.login-feature-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+.login-feature-icon {
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  background-color: rgba(255, 255, 255, 0.08);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  color: #38bdf8;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.login-feature-text strong {
+  display: block;
+  font-size: 0.95rem;
+  color: #ffffff;
+  margin-bottom: 0.2rem;
+}
+
+.login-feature-text span {
+  font-size: 0.85rem;
+  color: #94a3b8;
+  line-height: 1.4;
+}
+
+.login-graphic-footer {
+  font-size: 0.8rem;
+  color: #64748b;
+  letter-spacing: 0.02em;
+  z-index: 1;
+}
+
+.login-form-pane {
+  padding: 3.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background-color: var(--bg-card);
+  position: relative;
+}
+
+/* Toggle password button style */
+.password-toggle-btn {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color var(--transition-fast) ease;
+  z-index: 2;
+}
+
+.password-toggle-btn:hover {
+  color: var(--text-primary);
+}
+
+/* Responsiveness for Login Split Pane */
+@media (max-width: 900px) {
+  .login-container {
+    grid-template-columns: 1fr;
+    width: 460px;
+    min-height: auto;
+    border-radius: var(--radius-lg);
+  }
+  
+  .login-graphic {
+    display: none !important;
+  }
+  
+  .login-form-pane {
+    padding: 2.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .auth-wrapper {
+    padding: 0;
+    background-color: var(--bg-card);
+  }
+  
+  .login-container {
+    width: 100%;
+    border-radius: 0;
+    border: none;
+    box-shadow: none;
+  }
+  
+  .login-form-pane {
+    padding: 2rem 1.5rem;
+  }
 }
 
 /* ============================================
