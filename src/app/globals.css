@@ -1456,3 +1456,127 @@ tr:hover td {
   box-shadow: none !important;
   background: transparent !important;
 }
+
+/* ============================================
+   WIZARD FLOW & STEPPER STYLES
+   ============================================ */
+.wizard-stepper-container {
+  position: relative;
+  margin-bottom: 2.5rem;
+  padding: 0.5rem 0;
+}
+
+.wizard-stepper {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+  z-index: 1;
+}
+
+.wizard-progress-bar-bg {
+  position: absolute;
+  top: 20px;
+  left: 2.5rem;
+  right: 2.5rem;
+  height: 4px;
+  background-color: var(--border-color);
+  z-index: 0;
+  border-radius: 2px;
+}
+
+.wizard-progress-bar-fill {
+  position: absolute;
+  top: 20px;
+  left: 2.5rem;
+  height: 4px;
+  background-color: var(--primary-color);
+  z-index: 0;
+  border-radius: 2px;
+  transition: width var(--transition-medium) ease-in-out;
+}
+
+.step-node {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.6rem;
+  flex: 1;
+  position: relative;
+  z-index: 1;
+}
+
+.step-node-circle {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: #ffffff;
+  border: 2.5px solid var(--border-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: var(--text-secondary);
+  transition: all var(--transition-medium) ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.step-node-label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-align: center;
+  transition: color var(--transition-medium) ease;
+}
+
+/* Active Step Node */
+.step-node.active .step-node-circle {
+  border-color: var(--primary-color);
+  background-color: var(--primary-color);
+  color: #ffffff;
+  box-shadow: 0 0 0 4px var(--primary-glow);
+}
+
+.step-node.active .step-node-label {
+  color: var(--primary-color);
+  font-weight: 700;
+}
+
+/* Completed Step Node */
+.step-node.completed .step-node-circle {
+  border-color: var(--success-color);
+  background-color: var(--success-color);
+  color: #ffffff;
+  box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.15);
+}
+
+.step-node.completed .step-node-label {
+  color: var(--success-color);
+}
+
+/* Wizard Footer Bar */
+.wizard-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1.5px solid var(--border-color);
+}
+
+.wizard-validation-warning {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  background-color: var(--danger-glow);
+  border: 1px solid rgba(239, 68, 68, 0.25);
+  color: var(--danger-color);
+  padding: 0.75rem 1.25rem;
+  border-radius: var(--radius-sm);
+  font-size: 0.92rem;
+  font-weight: 500;
+  margin-bottom: 1.5rem;
+  animation: fadeIn var(--transition-fast) ease-in-out;
+}
+
