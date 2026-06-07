@@ -14,6 +14,7 @@ export default function CustomerDetail({ customerId, onBack }) {
   const { 
     customers, 
     transactions, 
+    products,
     settleSingleTransaction, 
     settleMonthTransactions, 
     getCustomerBonusStats 
@@ -451,7 +452,7 @@ export default function CustomerDetail({ customerId, onBack }) {
                 </thead>
                 <tbody>
                   {activeTxDetail.lines.map((l, idx) => {
-                    const prod = useDatabase().products.find(p => p.id === l.productId);
+                    const prod = products.find(p => p.id === l.productId);
                     return (
                       <tr key={idx}>
                         <td data-label="Nama Produk">{prod?.name || 'Produk Dihapus'}</td>
