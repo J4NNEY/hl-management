@@ -85,17 +85,29 @@ export const DatabaseProvider = ({ children }) => {
 
     const initAuth = async () => {
       setLoading(true);
-      const { data: { session } } = await supabase.auth.getSession();
-      
-      if (session) {
-        setIsAuthenticated(true);
-        setCurrentUser(session.user);
-        await loadAllData();
-      } else {
+      try {
+        const { data: { session }, error } = await supabase.auth.getSession();
+        if (error) {
+          console.error("Auth session error:", error.message);
+          // If token refresh is invalid, sign out to clear stored local tokens
+          await supabase.auth.signOut();
+          setIsAuthenticated(false);
+          setCurrentUser(null);
+        } else if (session) {
+          setIsAuthenticated(true);
+          setCurrentUser(session.user);
+          await loadAllData();
+        } else {
+          setIsAuthenticated(false);
+          setCurrentUser(null);
+        }
+      } catch (err) {
+        console.error("Failed to initialize session:", err);
         setIsAuthenticated(false);
         setCurrentUser(null);
+      } finally {
+        setLoading(false);
       }
-      setLoading(false);
     };
 
     initAuth();
@@ -141,6 +153,12 @@ export const DatabaseProvider = ({ children }) => {
       setTransactions((txRes.data || []).map(mapDbTx));
     } catch (e) {
       console.error('Gagal memuat data dari Supabase:', e.message);
+      // Auto signout if token is expired, unauthorized, or invalid
+      if (e.message?.includes('JWT') || e.status === 401 || e.code === 'PGRST301') {
+        setIsAuthenticated(false);
+        setCurrentUser(null);
+        supabase.auth.signOut();
+      }
     }
   };
 
